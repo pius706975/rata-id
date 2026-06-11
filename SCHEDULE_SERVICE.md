@@ -17,23 +17,28 @@ npm install
 #### 2. Environment Configuration
 
 Create `.env` file in root with:
-```env
-PORT=3002
+```bash
+  PORT=3002
 
-# POSTGRES
-POSTGRES_USER=pius
-POSTGRES_PASSWORD=piuspius
-POSTGRES_DB=healthcare_schedule
+  # POSTGRES
+  POSTGRES_USER=pius
+  POSTGRES_PASSWORD=piuspius
+  POSTGRES_DB=healthcare_schedule
 
-# Nest run locally
-DB_HOST=localhost
-# Nest run in docker, change host to database container name
-# DB_HOST=postgres
-DB_PORT=5432
-DB_SCHEMA=public
+  # Nest run locally
+  DB_HOST=localhost
+  # Nest run in docker, change host to database container name
+  # DB_HOST=postgres
+  DB_PORT=5432
+  DB_SCHEMA=public
 
-DATABASE_URL=postgresql://pius:piuspius@localhost:5432/healthcare_schedule?schema=public&sslmode=prefer
-AUTH_SERVICE_URL=http://localhost:3001/graphql
+  DATABASE_URL=postgresql://pius:piuspius@localhost:5432/healthcare_schedule?schema=public&sslmode=prefer
+  AUTH_SERVICE_URL=http://localhost:3001/graphql
+
+  MAILER_HOST=smtp.gmail.com
+  MAILER_PORT=587
+  MAILER_EMAIL=<MAILER_EMAIL>
+  MAILER_PASSWORD=<MAILER_PASSWORD>
 ```
 
 #### 3. Setup Database
