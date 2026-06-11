@@ -1,0 +1,128 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+input CreateCustomerInput {
+  email: String!
+  name: String!
+}
+
+input CreateDoctorInput {
+  name: String!
+}
+
+input CreateScheduleInput {
+  customerId: String!
+  doctorId: String!
+  objective: String!
+  scheduledAt: DateTime!
+}
+
+type Customer {
+  createdAt: DateTime!
+  email: String!
+  id: ID!
+  name: String!
+  updatedAt: DateTime!
+}
+
+type CustomerList {
+  data: [Customer!]!
+  skip: Int!
+  take: Int!
+  total: Int!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Doctor {
+  createdAt: DateTime!
+  id: ID!
+  name: String!
+  updatedAt: DateTime!
+}
+
+type DoctorList {
+  data: [Doctor!]!
+  skip: Int!
+  take: Int!
+  total: Int!
+}
+
+type Mutation {
+  """Create a new customer"""
+  createCustomer(data: CreateCustomerInput!): Customer!
+
+  """Create a new doctor"""
+  createDoctor(data: CreateDoctorInput!): Doctor!
+
+  """Create a new schedule"""
+  createSchedule(data: CreateScheduleInput!): Schedule!
+
+  """Delete customer"""
+  deleteCustomer(id: String!): Boolean!
+
+  """Delete doctor"""
+  deleteDoctor(id: String!): Boolean!
+
+  """Delete schedule"""
+  deleteSchedule(id: String!): Boolean!
+
+  """Update customer"""
+  updateCustomer(data: UpdateCustomerInput!, id: String!): Customer!
+
+  """Update doctor"""
+  updateDoctor(data: UpdateDoctorInput!, id: String!): Doctor!
+}
+
+type Query {
+  """Get customer by ID"""
+  customer(id: String!): Customer!
+
+  """Get all customers with pagination (offset-based)"""
+  customers(skip: Int = 0, take: Int = 10): CustomerList!
+
+  """Get doctor by ID"""
+  doctor(id: String!): Doctor!
+
+  """Get all doctors with pagination (offset-based)"""
+  doctors(skip: Int = 0, take: Int = 10): DoctorList!
+  hello: String!
+
+  """Get schedule by ID"""
+  schedule(id: String!): Schedule!
+
+  """Get all schedules with filters + pagination"""
+  schedules(customerId: String, doctorId: String, from: DateTime, objective: String, skip: Int = 0, take: Int = 10, to: DateTime): ScheduleList!
+}
+
+type Schedule {
+  createdAt: DateTime!
+  customer: Customer!
+  customerId: String!
+  doctor: Doctor!
+  doctorId: String!
+  id: ID!
+  objective: String!
+  scheduledAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type ScheduleList {
+  data: [Schedule!]!
+  skip: Int!
+  take: Int!
+  total: Int!
+}
+
+input UpdateCustomerInput {
+  email: String
+  name: String
+}
+
+input UpdateDoctorInput {
+  name: String
+}
