@@ -17,21 +17,25 @@ npm install
 
 Create `.env` file in root with:
 ```env
-# Database
+PORT=3001
+
+# POSTGRES
 POSTGRES_USER=pius
 POSTGRES_PASSWORD=piuspius
 POSTGRES_DB=healthcare_auth
+
+# Nest run locally
 DB_HOST=localhost
+# Nest run in docker, change host to database container name
+# DB_HOST=postgres
 DB_PORT=5432
 DB_SCHEMA=public
+
+
 DATABASE_URL=postgresql://pius:piuspius@localhost:5432/healthcare_auth?schema=public&sslmode=prefer
-
-# Server
-PORT=3001
-
-# Security
 JWT_ACCESS_SECRET=nestjsPrismaAccessSecret
 JWT_REFRESH_SECRET=nestjsPrismaRefreshSecret
+
 ```
 
 #### 3. Setup Database

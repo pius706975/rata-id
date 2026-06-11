@@ -18,19 +18,21 @@ npm install
 
 Create `.env` file in root with:
 ```env
-# Database
+PORT=3002
+
+# POSTGRES
 POSTGRES_USER=pius
 POSTGRES_PASSWORD=piuspius
 POSTGRES_DB=healthcare_schedule
+
+# Nest run locally
 DB_HOST=localhost
+# Nest run in docker, change host to database container name
+# DB_HOST=postgres
 DB_PORT=5432
 DB_SCHEMA=public
+
 DATABASE_URL=postgresql://pius:piuspius@localhost:5432/healthcare_schedule?schema=public&sslmode=prefer
-
-# Server
-PORT=3002
-
-# Cross-Service Auth
 AUTH_SERVICE_URL=http://localhost:3001/graphql
 ```
 
