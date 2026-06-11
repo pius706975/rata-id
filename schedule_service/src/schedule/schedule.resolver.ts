@@ -1,11 +1,10 @@
 import { Resolver, Mutation, Query, Args } from '@nestjs/graphql';
 import { Schedule } from './models/schedule.model';
-import { HttpBearerGuard } from 'src/common/guards/http-bearer.guard';
+import { HttpBearerGuard } from '../common/guards/http-bearer.guard';
 import { UseGuards } from '@nestjs/common';
 import { ScheduleService } from './schedule.service';
 import { CreateScheduleInput } from './dto/create-schedule.input';
 import { ScheduleList } from './models/schedule-list';
-import { SchedulePaginationArgs } from './dto/schedule-pagination.args';
 import { ScheduleFilterArgs } from './dto/schedule-filter.args';
 
 @Resolver(() => Schedule)

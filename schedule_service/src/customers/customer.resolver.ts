@@ -1,7 +1,7 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Customer } from './models/customer.model';
 import { UseGuards } from '@nestjs/common';
-import { HttpBearerGuard } from 'src/common/guards/http-bearer.guard';
+import { HttpBearerGuard } from './../common/guards/http-bearer.guard';
 import { CustomerService } from './customer.service';
 import { CreateCustomerInput } from './dto/create-customer.input';
 import { CustomerList } from './models/customer-list.model';

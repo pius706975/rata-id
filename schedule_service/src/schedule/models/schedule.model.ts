@@ -1,6 +1,6 @@
 import { ObjectType, Field, ID, GraphQLISODateTime } from '@nestjs/graphql';
-import { Customer } from 'src/customers/models/customer.model';
-import { Doctor } from 'src/doctors/models/doctor.model';
+import { Customer } from '../../customers/models/customer.model';
+import { Doctor } from '../../doctors/models/doctor.model';
 
 @ObjectType()
 export class Schedule {

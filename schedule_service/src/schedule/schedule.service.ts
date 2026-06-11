@@ -4,7 +4,7 @@ import { CreateScheduleInput } from './dto/create-schedule.input';
 import { Schedule } from './models/schedule.model';
 import { ScheduleList } from './models/schedule-list';
 import { ScheduleFilterArgs } from './dto/schedule-filter.args';
-import { sendEmail } from 'src/utils/email';
+import { sendEmail } from '../utils/email';
 
 @Injectable()
 export class ScheduleService {
