@@ -1,22 +1,25 @@
 import nodemailer from 'nodemailer';
+import { Processor, Process } from '@nestjs/bull';
+import { Job } from 'bull';
+import { EMAIL_QUEUE } from '../utils/queue-contract';
 
 export const sendEmail = (
-    recipient: string,
-    subject: string,
-    message: string,
-    callback: (error: Error | null, info: nodemailer.SentMessageInfo) => void,
+  recipient: string,
+  subject: string,
+  message: string,
+  callback: (error: Error | null, info: nodemailer.SentMessageInfo) => void,
 ) => {
-    const transporter = nodemailer.createTransport({
-        host: process.env.MAILER_HOST,
-        port: parseInt(process.env.MAILER_PORT || '587', 10),
-        secure: process.env.MAILER_PORT === '465',
-        auth: {
-            user: process.env.MAILER_EMAIL,
-            pass: process.env.MAILER_PASSWORD,
-        },
-    });
+  const transporter = nodemailer.createTransport({
+    host: process.env.MAILER_HOST,
+    port: parseInt(process.env.MAILER_PORT || '587', 10),
+    secure: process.env.MAILER_PORT === '465',
+    auth: {
+      user: process.env.MAILER_EMAIL,
+      pass: process.env.MAILER_PASSWORD,
+    },
+  });
 
-    const htmlTemplate = `
+  const htmlTemplate = `
         <!DOCTYPE html>
         <html lang="en">
         <head>
@@ -82,13 +85,34 @@ export const sendEmail = (
         </html>
     `;
 
-    const mailOptions = {
-        from: process.env.MAILER_EMAIL,
-        to: recipient,
-        subject,
-        text: message,
-        html: htmlTemplate, // Send HTML email
-    };
+  const mailOptions = {
+    from: process.env.MAILER_EMAIL,
+    to: recipient,
+    subject,
+    text: message,
+    html: htmlTemplate, // Send HTML email
+  };
 
-    transporter.sendMail(mailOptions, callback);
+  transporter.sendMail(mailOptions, callback);
 };
+
+@Processor(EMAIL_QUEUE)
+export class EmailProcessor {
+  @Process('schedule-created')
+  async handleScheduleCreated(job: Job) {
+    await this.send(job);
+  }
+
+  @Process('schedule-cancelled')
+  async handleScheduleCancelled(job: Job) {
+    await this.send(job);
+  }
+
+  private async send(job: Job) {
+    const { email, subject, message } = job.data;
+    sendEmail(email, subject, message, (err, info) => {
+      if (err) console.error('EMAIL ERROR:', err);
+      else console.log('EMAIL SENT:', info.response);
+    });
+  }
+}

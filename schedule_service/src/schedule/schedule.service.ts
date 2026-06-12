@@ -4,11 +4,16 @@ import { CreateScheduleInput } from './dto/create-schedule.input';
 import { Schedule } from './models/schedule.model';
 import { ScheduleList } from './models/schedule-list';
 import { ScheduleFilterArgs } from './dto/schedule-filter.args';
-import { sendEmail } from '../utils/email';
+import { InjectQueue } from '@nestjs/bull';
+import { EMAIL_QUEUE } from 'src/utils/queue-contract';
+import { Queue } from 'bull';
 
 @Injectable()
 export class ScheduleService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    @InjectQueue(EMAIL_QUEUE) private emailQueue: Queue,
+    private prisma: PrismaService,
+  ) {}
 
   async createSchedule(data: CreateScheduleInput): Promise<Schedule> {
     const existingDoctor = await this.prisma.doctor.findUnique({
@@ -55,20 +60,13 @@ export class ScheduleService {
         </div>
       `;
 
-    await new Promise((resolve, reject) => {
-      sendEmail(
-        existingCustomer.email,
-        'Jadwal Konsultasi Baru',
-        emailMessage,
-        (error, info) => {
-          if (error) {
-            reject(error);
-          } else {
-            resolve(info);
-          }
-        },
-      );
+    const job = await this.emailQueue.add('schedule-created', {
+      email: existingCustomer.email,
+      subject: 'Jadwal Konsultasi Baru',
+      message: emailMessage,
     });
+
+    console.log('Job created: ', job.id);
 
     return this.prisma.schedule.create({
       data: {
@@ -188,20 +186,13 @@ export class ScheduleService {
         </div>
       `;
 
-    await new Promise((resolve, reject) => {
-      sendEmail(
-        existingSchedule.customer.email,
-        'Pembatalan Jadwal Konsultasi',
-        emailMessage,
-        (error, info) => {
-          if (error) {
-            reject(error);
-          } else {
-            resolve(info);
-          }
-        },
-      );
+    const job = await this.emailQueue.add('schedule-cancelled', {
+      email: existingSchedule.customer.email,
+      subject: 'Pembatalan Jadwal Konsultasi',
+      message: emailMessage,
     });
+
+    console.log('Job created: ', job.id);
 
     await this.prisma.schedule.delete({
       where: { id },

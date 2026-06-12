@@ -1,17 +1,15 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { PrismaModule } from 'nestjs-prisma';
 import config from './common/configs/config';
 import { GqlConfigService } from './gql-config.service';
-import { DoctorsModule } from './doctors/doctors.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AppResolver } from './app.resolver';
-import { CustomerModule } from './customers/customer.module';
-import { ScheduleModule } from './schedule/schedule.module';
-import { QueueModule } from './utils/bull.module';
+import { BullModule } from '@nestjs/bull';
+import { EMAIL_QUEUE } from './utils/queue-contract';
+import { EmailProcessor } from './utils/email';
 
 @Module({
   imports: [
@@ -23,15 +21,15 @@ import { QueueModule } from './utils/bull.module';
       driver: ApolloDriver,
       useClass: GqlConfigService,
     }),
-    PrismaModule.forRoot({
-      isGlobal: true,
+    BullModule.registerQueue({
+      name: EMAIL_QUEUE,
+      redis: {
+        host: process.env.REDIS_HOST,
+        port: parseInt(process.env.REDIS_PORT, 10),
+      },
     }),
-    QueueModule,
-    DoctorsModule,
-    CustomerModule,
-    ScheduleModule,
   ],
   controllers: [AppController],
-  providers: [AppService, AppResolver],
+  providers: [AppService, AppResolver, EmailProcessor],
 })
 export class AppModule {}
