@@ -97,7 +97,8 @@ auth_service/
 | `npm run migrate:reset` | Reset database to clean state |
 | `npm run prisma:generate` | Generate Prisma Client |
 | `npm run format` | Format code with Prettier |
-| `npm run typecheck` | Check error TS
+| `npm run typecheck` | Check error TS |
+| `npm run test:cov` | Run coverage on untested files |
 
 ---
 
